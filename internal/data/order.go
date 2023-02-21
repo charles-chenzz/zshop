@@ -47,29 +47,31 @@ func (r *orderRepo) CreateOrder(ctx context.Context, req *v1.CreateOrderRequest)
 		return nil, err
 	}
 
+	orderField := req.GetOrderInformation().GetOrderField()
+	shipping := req.GetOrderInformation().GetShippingAddress()
 	// todo graceful solution
 	order := types.Order{
-		OrderId:       req.GetOrderInformation().GetOrderField().GetOrderId(),
-		TransactionId: 0,
-		ProductId:     0,
-		ProductType:   0,
-		Quantity:      0,
-		Size:          "",
-		Color:         "",
+		OrderId:       orderField.GetOrderId(),
+		TransactionId: orderField.GetTransactionId(),
+		ProductId:     orderField.GetProductId(),
+		ProductType:   orderField.GetProductType(),
+		Quantity:      orderField.GetQuantity(),
+		Size:          orderField.GetSize(),
+		Color:         orderField.GetColor(),
 		Status:        0,
 		RetryTime:     0,
 	}
 
 	ship := types.Shipping{
-		Email:             "",
-		Address:           "",
-		FirstName:         "",
-		LastName:          "",
-		ApartmentSuiteEtc: "",
-		City:              "",
-		State:             0,
-		ZipCode:           0,
-		Phone:             0,
+		Email:             shipping.GetEmail(),
+		Address:           shipping.GetAddress(),
+		FirstName:         shipping.GetFirstName(),
+		LastName:          shipping.GetLastName(),
+		ApartmentSuiteEtc: shipping.GetApartmentSuiteEtc(),
+		City:              shipping.GetCity(),
+		State:             shipping.GetState(),
+		ZipCode:           shipping.GetZipCode(),
+		Phone:             shipping.GetPhone(),
 	}
 
 	if err = tx.Create(&order).Error; err != nil {

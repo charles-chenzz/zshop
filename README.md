@@ -1,7 +1,7 @@
 # zshop
 
 ## todo
-### 1. switch gorm to original sql (using raw sql for data handle)
+### 1. switch gorm to original sql (using raw sql for data handle) done
 ### 2. finish more api (payment/ shipping / email notify etc)
 ### 3. wrapped mq and redis into data
 ### 4. prometheus metrics support (for k8s)

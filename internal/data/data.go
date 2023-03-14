@@ -1,47 +1,46 @@
 package data
 
 import (
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
-	"zshop/internal/conf"
-
+	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
+	"github.com/jmoiron/sqlx"
+	"zshop/internal/conf"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewDB, NewGreeterRepo, NewOrderRepo)
+var ProviderSet = wire.NewSet(NewData, NewMysql, NewGreeterRepo, NewOrderRepo)
 
 // Data .
 type Data struct {
 	// TODO wrapped database client
-	db *gorm.DB
+	db *sqlx.DB
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger, db *gorm.DB) (*Data, func(), error) {
+func NewData(c *conf.Data, logger log.Logger, db *sqlx.DB) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
 	return &Data{db: db}, cleanup, nil
 }
 
-func NewDB(c *conf.Data) (*gorm.DB, error) {
-	db, err := gorm.Open(mysql.Open(c.Database.Source), &gorm.Config{
-		NamingStrategy: schema.NamingStrategy{TablePrefix: "t", SingularTable: true},
-	})
+func NewMysql(c *conf.Data) (*sqlx.DB, error) {
+	// abstract into a package todo
+	db, err := sqlx.Connect("mysql", c.Database.Source)
 	if err != nil {
+		fmt.Printf("error:%v", err)
 		return nil, err
 	}
 
-	DB, err := db.DB()
+	err = db.Ping()
 	if err != nil {
-		return nil, err
+		fmt.Printf("error:%v", err)
 	}
 
-	DB.SetMaxOpenConns(50)
-	DB.SetMaxIdleConns(50)
+	db.SetMaxOpenConns(50)
+	db.SetMaxIdleConns(50)
 
-	return db, err
+	return db, nil
 }

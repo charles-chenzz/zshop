@@ -29,23 +29,16 @@ func (r *orderRepo) CreateOrder(ctx context.Context, req *v1.CreateOrderRequest)
 		UserName: req.GetUser().GetUserName(),
 	}
 
-	result := db.Create(&u)
+	sql := "place your sql here"
 
-	if result.RowsAffected != 1 {
-		log.Errorf("insert table t_user error: param:%v", u)
-		return nil, result.Error
-	}
-
-	tx := db.Begin()
-	defer func() {
-		if p := recover(); p != nil {
-			tx.Rollback()
-		}
-	}()
-
-	if err = tx.Error; err != nil {
+	result, err := db.Exec(sql)
+	if err != nil {
+		log.Errorf("insert/update/delete error:%v", err)
 		return nil, err
 	}
+
+	count, _ := result.RowsAffected()
+	log.Debugf("result:%v", count)
 
 	orderField := req.GetOrderInformation().GetOrderField()
 	shipping := req.GetOrderInformation().GetShippingAddress()
@@ -74,17 +67,21 @@ func (r *orderRepo) CreateOrder(ctx context.Context, req *v1.CreateOrderRequest)
 		Phone:             shipping.GetPhone(),
 	}
 
-	if err = tx.Create(&order).Error; err != nil {
-		tx.Rollback()
+	err = db.Select(&u, "place your query text here")
+	if err != nil {
+		log.Errorf("error:%v", err)
 		return nil, err
 	}
 
-	if err = tx.Create(&ship).Error; err != nil {
-		tx.Rollback()
+	err = db.Select(&order, "place your query text here")
+	if err != nil {
+		log.Errorf("error:%v", err)
 		return nil, err
 	}
 
-	if tx.Commit().Error != nil {
+	err = db.Select(&ship, "place your query text here")
+	if err != nil {
+		log.Errorf("error:%v", err)
 		return nil, err
 	}
 

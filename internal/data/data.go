@@ -27,7 +27,7 @@ func NewData(c *conf.Data, logger log.Logger, db *sqlx.DB) (*Data, func(), error
 }
 
 func NewMysql(c *conf.Data) (*sqlx.DB, error) {
-	// abstract into a package todo
+	// if you don't create volume here, when you running on k8s or docker it will panic
 	db, err := sqlx.Connect("mysql", c.Database.Source)
 	if err != nil {
 		fmt.Printf("error:%v", err)

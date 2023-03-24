@@ -1,9 +1,14 @@
 package types
 
+// all mysql related struct and connect
 const (
 	BizError        int64 = 1000
 	ValidatingError int64 = 1001
 	DataCreateError int64 = 1002
+)
+
+const (
+	DSN = "127.0.0.1"
 )
 
 // User is database table

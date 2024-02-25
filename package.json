@@ -27,5 +27,8 @@
   "homepage": "https://github.com/charles-chenzz/zshop#readme",
   "devDependencies": {
     "simple-mq-using-go-redis": "^1.0.1"
+  },
+  "dependencies": {
+    "golangci-lint-helper": "^0.0.2"
   }
 }

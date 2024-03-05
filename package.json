@@ -1,6 +1,6 @@
 {
   "name": "zshop",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "ha shop",
   "main": "cmd/zshop/main.go",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/charles-chenzz/zshop.git"
+    "url": "https://github.com/charles-chenzz/zshop.git"
   },
   "keywords": [
     "shop",
